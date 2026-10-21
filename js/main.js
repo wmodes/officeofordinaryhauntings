@@ -85,7 +85,8 @@
     form.addEventListener('submit', function (evt) {
       evt.preventDefault();
 
-      var object = (form.elements.object.value || 'object').toLowerCase();
+      var category = form.elements.category.value;
+      var object = (form.elements.object.value.trim() || 'object').toLowerCase();
       var room = form.elements.room.value.trim();
       var behavior = form.elements.behavior.value.trim();
       var opening = behavior.split(/\s+/).slice(0, 8).join(' ');
@@ -115,6 +116,7 @@
       // actually deliver the report: a mailto link prefilled with their answers.
       var caseNo = lines[1].replace('Case No. ', '');
       var report = [
+        'Category: ' + category,
         'Object: ' + object,
         'Location: ' + room,
         'Observed behavior: ' + behavior,

@@ -13,19 +13,30 @@ description: Form 27-B/6: report anomalous behavior in an ordinary object to the
 
 <form id="report-form" class="form" action="#" method="post">
   <div class="form-field">
-    <label for="object">Type of object *
-      <span class="hint">Select the one that best describes the subject.</span></label>
-    <select id="object" name="object" required>
+    <label for="category">Category of object *
+      <span class="hint">Select the closest match.</span></label>
+    <select id="category" name="category" required>
       <option value="">&mdash; Select &mdash;</option>
-      <option>Smoke alarm</option>
-      <option>Telephone</option>
-      <option>Lamp</option>
-      <option>Calculator</option>
-      <option>Printer</option>
-      <option>Paper shredder</option>
-      <option>Appliance</option>
-      <option>Other</option>
+      <option>Alarm, clock, or signaling device</option>
+      <option>Telephone or communication device</option>
+      <option>Lamp or lighting</option>
+      <option>Household appliance</option>
+      <option>Kitchen or domestic item</option>
+      <option>Office or business equipment</option>
+      <option>Audio, video, or musical equipment</option>
+      <option>Furniture or fixture</option>
+      <option>Tool, hardware, or machinery</option>
+      <option>Vehicle or part of a vehicle</option>
+      <option>Toy, game, or novelty</option>
+      <option>Clothing or personal item</option>
+      <option>Other (describe below)</option>
     </select>
+  </div>
+
+  <div class="form-field">
+    <label for="object">Object *
+      <span class="hint">What, specifically? For example: kitchen smoke alarm, rotary telephone, brass lamp.</span></label>
+    <input type="text" id="object" name="object" maxlength="80" autocomplete="off" required>
   </div>
 
   <div class="form-field">
