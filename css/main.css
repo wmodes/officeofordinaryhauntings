@@ -1,0 +1,337 @@
+/*
+ * main.css — Office of Ordinary Hauntings
+ *
+ * Maximalist late-80s/90s look: starfield wallpaper, a cream "government form"
+ * panel flanked by neon-on-navy sidebars, bevelled buttons, rainbow rules,
+ * webrings, and a generous amount of animation. Layout uses modern grid/flex
+ * (not real <table>s) so it stays responsive and accessible while looking like
+ * it was built in Notepad by someone with a lot of free time.
+ *
+ * Sections: tokens, base, layout, header/ticker, sidebars, content, widgets,
+ * footer, motion, small screens.
+ */
+
+/* ---------- Tokens ---------- */
+:root {
+  --space-navy: #0b0b2e;
+  --ink: #1a1a4a;
+  --paper: #f4ecd0;
+  --paper-edge: #d9cc9a;
+  --link: #0000ee;
+  --link-visited: #551a8b;
+  --link-hover: #cc0000;
+  --slime: #39ff14;
+  --cyan: #00e5ff;
+  --magenta: #ff2bd6;
+  --stamp-red: #b3001b;
+  --hazard: #ffcc00;
+  --serif: "Times New Roman", Times, serif;
+  --mono: "Courier New", Courier, monospace;
+  --fun: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  background-color: var(--space-navy);
+  /* Tiled starfield built from gradients: no image file needed. */
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+    radial-gradient(1px 1px at 90px 80px, #fff, transparent),
+    radial-gradient(2px 2px at 150px 40px, #ffe9a8, transparent),
+    radial-gradient(1px 1px at 60px 140px, #cfe3ff, transparent),
+    radial-gradient(1px 1px at 180px 160px, #fff, transparent);
+  background-size: 200px 200px;
+}
+
+a:link { color: var(--link); }
+a:visited { color: var(--link-visited); }
+a:hover, a:focus-visible { color: var(--link-hover); background: var(--hazard); }
+
+h1, h2, h3 { font-family: var(--serif); line-height: 1.15; }
+
+/* Rainbow rule, a period staple. */
+hr {
+  border: 0;
+  height: 6px;
+  margin: 20px 0;
+  background: linear-gradient(90deg, #f00, #f80, #ff0, #0c0, #08f, #80f, #f0c, #f00);
+  background-size: 200% 100%;
+  animation: rainbow-slide 6s linear infinite;
+}
+hr.hazard { background: repeating-linear-gradient(45deg, var(--hazard) 0 12px, var(--ink) 12px 24px); animation: none; }
+
+.skip-link { position: absolute; left: -999px; }
+.skip-link:focus { left: 8px; top: 8px; background: var(--hazard); padding: 4px 8px; z-index: 10; }
+
+/* ---------- Layout ---------- */
+.page {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 4px double var(--ink);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* Three columns: left nav, main memo, right widgets. */
+.layout {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 180px;
+}
+
+/* ---------- Header / ticker ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border-bottom: 4px double var(--ink);
+  background: #fff8dc;
+}
+.site-header .seal { width: 100px; height: 100px; flex: none; }
+.site-header .title { text-align: center; }
+.site-header h1 { margin: 0; font-size: 2.2rem; text-transform: uppercase; letter-spacing: 2px; }
+.site-header .tagline { margin: 4px 0 0; font-family: var(--mono); font-size: 0.9rem; }
+
+.ticker {
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--slime);
+  font-family: var(--mono);
+  white-space: nowrap;
+}
+.ticker span { display: inline-block; padding-left: 100%; animation: scroll-left 32s linear infinite; }
+.ticker.alt { background: #000; color: var(--cyan); }
+.ticker.alt span { animation-direction: reverse; animation-duration: 40s; padding-left: 0; padding-right: 100%; }
+
+/* ---------- Sidebars ---------- */
+.sidebar {
+  padding: 12px 10px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--fun);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.sidebar a:link { color: #ffff66; }
+.sidebar a:visited { color: #ff99ff; }
+.sidebar a:hover, .sidebar a:focus-visible { color: #000; background: var(--hazard); }
+.sidebar h2 { margin: 12px 0 6px; font-size: 0.95rem; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; }
+.sidebar ul { margin: 0; padding: 0; list-style: none; }
+
+/* Bevelled nav buttons: the classic gray slab. */
+.btn-list li + li { margin-top: 6px; }
+.btn-list a {
+  display: block;
+  padding: 5px 4px;
+  color: #000 !important;
+  background: #c0c0c0;
+  border: 3px outset #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+.btn-list a:hover, .btn-list a:focus-visible { background: var(--hazard); border-style: inset; }
+
+.box { margin: 12px 0; padding: 8px; border: 2px ridge var(--magenta); background: #14143c; }
+
+.counter {
+  display: inline-block;
+  padding: 2px 6px;
+  background: #000;
+  color: var(--slime);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  border: 3px inset #888;
+}
+
+.webring a { display: inline-block; margin: 2px; }
+.webring .ring-title { color: var(--hazard); font-weight: bold; }
+
+/* ---------- Content ---------- */
+.content { padding: 12px 24px 24px; border-left: 4px double var(--ink); border-right: 4px double var(--ink); }
+
+.memo-head { font-family: var(--mono); font-size: 0.9rem; border: 1px dashed var(--ink); padding: 8px 12px; }
+.memo-head dt { float: left; clear: left; width: 6.5em; font-weight: bold; }
+.memo-head dd { margin: 0 0 2px 6.5em; }
+
+.stamp {
+  display: inline-block;
+  transform: rotate(-4deg);
+  color: var(--stamp-red);
+  border: 3px solid var(--stamp-red);
+  padding: 2px 10px;
+  font-family: var(--mono);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.fun { font-family: var(--fun); }
+.fine-print { font-size: 0.75rem; color: #444; }
+/* "Classified" highlight: light text on a dark bar, so it stays legible
+   (dark-on-dark would be unreadable). Hover/focus reveals the plain text. */
+.redacted { background: var(--ink); color: #e6e6ff; padding: 0 4px; }
+.redacted:hover, .redacted:focus { background: transparent; color: inherit; }
+
+.callout {
+  margin: 20px 0;
+  padding: 12px 16px;
+  background: #fffbe8;
+  border: 2px solid var(--ink);
+  border-left: 12px solid var(--hazard);
+}
+
+/* A field-notes excerpt, typed on green-bar paper. */
+.field-notes {
+  margin: 20px 0;
+  padding: 10px 16px;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  background: repeating-linear-gradient(#e7f5e1 0 1.5em, #fff 1.5em 3em);
+  border: 2px solid var(--ink);
+  border-left: 18px dotted var(--ink);
+}
+
+/* ---------- Widgets ---------- */
+.blink { animation: blink 1.1s steps(2, start) infinite; color: var(--stamp-red); font-weight: bold; }
+
+/* Rainbow-gradient text that slides, because why not. */
+.rainbow-text {
+  /* Deeper hues than the rules, so every stop reads on cream paper. */
+  background: linear-gradient(90deg, #c00, #d60, #a80, #080, #06c, #60c, #c09, #c00);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-slide 4s linear infinite;
+}
+
+.spin { animation: spin 10s linear infinite; }
+.twinkle { display: inline-block; animation: twinkle 1.6s ease-in-out infinite; }
+
+.construction { text-align: center; margin: 20px 0; }
+/* Hazard stripes frame a solid plate, so the text never sits on the stripes. */
+.construction .tape {
+  display: block;
+  padding: 8px;
+  background: repeating-linear-gradient(45deg, var(--hazard) 0 14px, #111 14px 28px);
+}
+.construction .tape-text {
+  display: block;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #111;
+  background: var(--hazard);
+}
+
+.badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 8px 0 0; padding: 0; list-style: none; }
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 31px;
+  font: bold 9px/1.1 var(--mono);
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(#556, #223);
+  border: 2px outset #99a;
+}
+.badge.hot { background: linear-gradient(#f80, #a00); }
+.badge.cool { background: linear-gradient(#0cf, #036); }
+.badge.green { background: linear-gradient(#3c3, #060); }
+
+/* ---------- Inner pages ---------- */
+.btn-list a[aria-current="page"] { background: var(--hazard); border-style: inset; }
+
+.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.95rem; }
+.data-table th, .data-table td { padding: 6px 10px; text-align: left; vertical-align: top; border: 1px solid var(--ink); }
+.data-table th { background: var(--ink); color: #fff; font-family: var(--mono); font-weight: normal; }
+.data-table tbody tr:nth-child(even) { background: #fffbe8; }
+
+/* Dated history entries. */
+.timeline dt { margin-top: 12px; font-family: var(--mono); font-weight: bold; color: var(--stamp-red); }
+.timeline dd { margin: 0 0 0 1.5em; }
+
+/* A case file or staff record: a bordered card with a label column. */
+.case, .staff-card {
+  margin: 20px 0;
+  padding: 10px 16px;
+  background: #fffbe8;
+  border: 2px solid var(--ink);
+  border-top: 10px solid var(--ink);
+}
+.case h3, .staff-card h3 { margin: 4px 0 8px; }
+.case dl, .staff-card dl { margin: 0 0 8px; font-family: var(--mono); font-size: 0.85rem; }
+.case dt, .staff-card dt { float: left; clear: left; width: 8.5em; font-weight: bold; }
+.case dd, .staff-card dd { margin: 0 0 2px 8.5em; }
+
+/* Forms: the intake form and the guestbook. */
+.form-field { margin: 12px 0; }
+.form-field label { display: block; font-weight: bold; }
+.form-field .hint { display: block; font-size: 0.8rem; font-weight: normal; color: #444; }
+.form-field input[type="text"], .form-field select, .form-field textarea {
+  width: 100%;
+  padding: 4px 6px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 2px inset #888;
+}
+.form-field textarea { min-height: 7em; }
+.form-check { margin: 10px 0; }
+.btn-submit {
+  padding: 6px 18px;
+  font: bold 1rem var(--fun);
+  color: #000;
+  background: #c0c0c0;
+  border: 3px outset #fff;
+  cursor: pointer;
+}
+.btn-submit:hover, .btn-submit:focus-visible { background: var(--hazard); }
+
+.receipt { padding: 12px 16px; background: #fffbe8; border: 3px double var(--stamp-red); font-family: var(--mono); }
+
+.guest { margin: 12px 0; padding: 8px 12px; background: #fffbe8; border: 1px solid var(--ink); }
+.guest .guest-meta { font-family: var(--mono); font-size: 0.8rem; color: #444; }
+.guest.pending { border-style: dashed; }
+
+.reading-list li { margin-bottom: 10px; }
+
+/* ---------- Footer ---------- */
+.site-footer { padding: 16px 24px; text-align: center; border-top: 4px double var(--ink); background: #fff8dc; }
+
+/* ---------- Motion ---------- */
+@keyframes blink { to { visibility: hidden; } }
+@keyframes scroll-left { to { transform: translateX(-100%); } }
+@keyframes rainbow-slide { to { background-position: 200% 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes twinkle { 50% { opacity: 0.2; transform: scale(0.7) rotate(25deg); } }
+
+/* Respect people who ask for less motion: freeze everything, stop blinking. */
+@media (prefers-reduced-motion: reduce) {
+  .ticker span, .ticker.alt span { animation: none; padding: 0 8px; white-space: normal; }
+  .blink, .spin, .twinkle, .rainbow-text, hr { animation: none; }
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 760px) {
+  body { padding: 8px; }
+  .layout { grid-template-columns: 1fr; }
+  .content { order: -1; border: 0; padding: 8px 14px 20px; }
+  .site-header { flex-direction: column; text-align: center; }
+  .site-header h1 { font-size: 1.5rem; }
+  .site-header .seal.right { display: none; }
+}

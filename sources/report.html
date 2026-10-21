@@ -1,0 +1,63 @@
+<!--
+title: Report a Haunting
+description: Form 27-B/6: report anomalous behavior in an ordinary object to the Office of Ordinary Hauntings.
+-->
+<h2 class="rainbow-text">Form 27-B/6 &mdash; Report of Anomalous Behavior</h2>
+
+<p>
+  Please complete this form to report anomalous behavior in an ordinary object. The Office
+  investigates objects only. We do not investigate persons, dwellings, or
+  computers. Fields marked * are required. Fields not marked * are also required, but
+  we will not tell you which.
+</p>
+
+<form id="report-form" class="form" action="#" method="post">
+  <div class="form-field">
+    <label for="object">Type of object *
+      <span class="hint">Select the one that best describes the subject.</span></label>
+    <select id="object" name="object" required>
+      <option value="">&mdash; Select &mdash;</option>
+      <option>Smoke alarm</option>
+      <option>Telephone</option>
+      <option>Lamp</option>
+      <option>Calculator</option>
+      <option>Printer</option>
+      <option>Paper shredder</option>
+      <option>Appliance</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div class="form-field">
+    <label for="room">Location of the object
+      <span class="hint">Room or area. Please be specific.</span></label>
+    <input type="text" id="room" name="room" autocomplete="off">
+  </div>
+
+  <div class="form-field">
+    <label for="behavior">Observed behavior *
+      <span class="hint">In your own words, as completely as possible.</span></label>
+    <textarea id="behavior" name="behavior" required></textarea>
+  </div>
+
+  <div class="form-field">
+    <label for="frequency">Frequency
+      <span class="hint">How often, and at what hours.</span></label>
+    <input type="text" id="frequency" name="frequency" autocomplete="off">
+  </div>
+
+  <div class="form-check">
+    <input type="checkbox" id="listening" name="listening">
+    <label for="listening">The object appears to be listening.</label>
+  </div>
+
+  <div class="form-check">
+    <input type="checkbox" id="session" name="session">
+    <label for="session">Box 14: I wish to request a Controlled Observation Session.</label>
+  </div>
+
+  <p><button type="submit" class="btn-submit">Submit Report</button></p>
+  <p class="fine-print">Reports are processed in triplicate. We will contact you within 6&ndash;8 business weeks.</p>
+</form>
+
+<div id="report-receipt" class="receipt" tabindex="-1" hidden></div>

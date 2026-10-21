@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}">
+  <link rel="icon" href="img/seal.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="page">
+    {{> header}}
+
+    {{> ticker}}
+
+    <div class="layout">
+      {{> menu}}
+
+      <!-- ===== Main column ===== -->
+      <main id="main" class="content">{{content}}</main>
+
+      {{> widgets}}
+    </div>
+
+    {{> footer}}
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

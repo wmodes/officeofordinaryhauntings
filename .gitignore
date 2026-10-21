@@ -1,0 +1,11 @@
+# Private project instructions (may contain sensitive info)
+CLAUDE.md
+.claude/
+
+# OS / editor cruft
+.DS_Store
+*.swp
+.vscode/
+
+# Local-only config
+.env

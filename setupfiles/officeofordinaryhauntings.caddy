@@ -1,0 +1,65 @@
+# Caddyfile for Office of Ordinary Hauntings
+#
+# Symlink with:
+# % sudo ln -sf /home/debian/officeofordinaryhauntings/setupfiles/officeofordinaryhauntings.caddy /etc/caddy/sites/officeofordinaryhauntings.caddy
+# % echo 'import sites/*' | sudo tee /etc/caddy/Caddyfile  # if not already there
+#
+# Check the whole config BEFORE reloading (other sites share this Caddy):
+# % sudo caddy validate --config /etc/caddy/Caddyfile
+#
+# Reload (graceful; never restart while other sites are live):
+# % sudo systemctl reload caddy
+#
+# View journal:
+# % journalctl -u caddy --no-pager | less
+# (access log for this site: /var/log/caddy/officeofordinaryhauntings-access.log)
+#
+# Deploy new content:
+# % cd /home/debian/officeofordinaryhauntings && git pull --ff-only
+#
+# HTTP is redirected to HTTPS automatically by Caddy.
+
+# Canonical site. The repo root is the web root: built pages, css/, js/, img/.
+https://officeofordinaryhauntings.net {
+	encode gzip
+	tls wmodes@gmail.com
+
+	log {
+		output file /var/log/caddy/officeofordinaryhauntings-access.log {
+			roll_size 100mb
+			roll_keep 7
+			roll_keep_for 720h
+		}
+	}
+
+	# The repo root is served, so everything that lives there but is not part
+	# of the site must be refused: build inputs, tooling, deploy config, git
+	# internals, and project docs. Answer 404 (not 403) so the paths don't
+	# even confirm they exist. Path matching in Caddy is case-insensitive.
+	@private path /sources /sources/* /elements /elements/* /scripts /scripts/* /setupfiles /setupfiles/* /.git /.git/* /.gitignore /.claude /.claude/* /CLAUDE.md /README.md /deploy.sh
+	handle @private {
+		respond "Not found" 404
+	}
+
+	handle {
+		root * /home/debian/officeofordinaryhauntings
+		file_server
+	}
+}
+
+# www goes to the apex.
+https://www.officeofordinaryhauntings.net {
+	tls wmodes@gmail.com
+	redir https://officeofordinaryhauntings.net{uri} permanent
+}
+
+# The singular spelling of the domain should also redirect to the canonical
+# site. DISABLED until its DNS points at this server (A/AAAA on the apex, www
+# as a CNAME to the apex): until then Caddy's certificate requests for it
+# would fail and keep retrying. Once DNS is set, uncomment, commit, pull,
+# validate, and reload. Delete this block if the domain is ever let go.
+#
+# https://officeofordinaryhaunting.net, https://www.officeofordinaryhaunting.net {
+#     tls wmodes@gmail.com
+#     redir https://officeofordinaryhauntings.net{uri} permanent
+# }
