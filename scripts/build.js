@@ -9,8 +9,10 @@
  *   elements/  the shared pieces: layout.html (the page skeleton) and the
  *              partials it includes (header, ticker, menu, widgets, footer).
  *
- * The built pages are written to the repo root, where the web server serves
- * them (and where they are committed, so a plain `git pull` deploys the site).
+ * The built pages are written to pages/, which the web server uses as its
+ * document root (so URLs never include "pages"). They are committed, so a
+ * plain `git pull` deploys the site. Assets (css/, js/, img/) stay at the repo
+ * root and are referenced with root-absolute URLs such as /css/main.css.
  *
  * Source format:
  *
@@ -36,6 +38,7 @@ const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const SOURCES = path.join(ROOT, 'sources');
 const ELEMENTS = path.join(ROOT, 'elements');
+const PAGES = path.join(ROOT, 'pages');
 const LAYOUT_FILE = 'layout.html';
 const SITE_NAME = 'Office of Ordinary Hauntings';
 
@@ -129,9 +132,10 @@ function buildPage(layout, file) {
 function main() {
   const layout = expandIncludes(fs.readFileSync(path.join(ELEMENTS, LAYOUT_FILE), 'utf8'));
   const files = fs.readdirSync(SOURCES).filter((f) => f.endsWith('.html') && !f.startsWith('_'));
+  fs.mkdirSync(PAGES, { recursive: true });
 
   for (const file of files) {
-    fs.writeFileSync(path.join(ROOT, file), buildPage(layout, file));
+    fs.writeFileSync(path.join(PAGES, file), buildPage(layout, file));
     console.log(`built ${file}`);
   }
 }

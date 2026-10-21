@@ -10,21 +10,23 @@ Form 27-B/6.
 ## Layout
 
 ```
-index.html, about.html, ...   Built pages (plain HTML; this is what gets served)
-css/  js/  img/               Styles, scripts, images
+pages/                        Built pages (plain HTML), served as the site root: /about.html
+css/  js/  img/               Styles, scripts, images, served at /css/, /js/, /img/
 sources/                      One file per page: its <main> content + front matter
 elements/                     Shared pieces: layout.html and the partials it includes
 scripts/                      build.js, deploy.sh
 setupfiles/                   Server config (Caddy site file)
 ```
 
-`sources/`, `elements/`, `scripts/`, and `setupfiles/` are not served; the Caddy
-site file returns 404 for them.
+Caddy serves `pages/` as the document root (so `pages` never appears in a URL)
+plus an allow-list of `css/`, `js/`, and `img/`. Everything else in the repo,
+including `sources/`, `elements/`, `scripts/`, `setupfiles/`, and `.git`, sits
+outside both and cannot be requested.
 
 ## Editing
 
 Edit the files in `sources/` (page content) and `elements/` (header, menu,
-widgets, footer), never the built pages in the repo root, then rebuild:
+widgets, footer), never the built pages in `pages/`, then rebuild:
 
 ```sh
 node scripts/build.js
@@ -36,7 +38,9 @@ link in `elements/menu.html`. Commit the built pages along with the sources: the
 server only does a `git pull`.
 
 To preview, serve the repo root with any static server, for example
-`python3 -m http.server`.
+`python3 -m http.server`, and open `/pages/`. (Pages link to assets with
+root-absolute URLs like `/css/main.css`, so the repo root, not `pages/`, must be
+the server root.)
 
 ## Deploying
 

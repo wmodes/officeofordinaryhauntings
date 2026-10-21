@@ -19,7 +19,10 @@
 #
 # HTTP is redirected to HTTPS automatically by Caddy.
 
-# Canonical site. The repo root is the web root: built pages, css/, js/, img/.
+# Canonical site. Pages are served from pages/ (so URLs never include "pages"),
+# and only css/, js/ and img/ are served from the repo root. Everything else
+# in the repo (sources/, elements/, scripts/, setupfiles/, .git, README...) is
+# outside both roots, so it cannot be reached at all.
 https://officeofordinaryhauntings.net {
 	encode gzip
 	tls wmodes@gmail.com
@@ -32,17 +35,17 @@ https://officeofordinaryhauntings.net {
 		}
 	}
 
-	# The repo root is served, so everything that lives there but is not part
-	# of the site must be refused: build inputs, tooling, deploy config, git
-	# internals, and project docs. Answer 404 (not 403) so the paths don't
-	# even confirm they exist. Path matching in Caddy is case-insensitive.
-	@private path /sources /sources/* /elements /elements/* /scripts /scripts/* /setupfiles /setupfiles/* /.git /.git/* /.gitignore /.claude /.claude/* /CLAUDE.md /README.md /deploy.sh
-	handle @private {
-		respond "Not found" 404
+	# Static assets: an allow-list of three folders at the repo root.
+	@assets path /css/* /js/* /img/*
+	handle @assets {
+		root * /home/debian/officeofordinaryhauntings
+		file_server
 	}
 
+	# Everything else is a page: "/" is pages/index.html, "/about.html" is
+	# pages/about.html. A request for "/pages/..." looks for pages/pages/... and 404s.
 	handle {
-		root * /home/debian/officeofordinaryhauntings
+		root * /home/debian/officeofordinaryhauntings/pages
 		file_server
 	}
 }
