@@ -111,6 +111,26 @@
         receipt.appendChild(p);
       });
 
+      // Nothing is transmitted by this page, so offer the visitor a way to
+      // actually deliver the report: a mailto link prefilled with their answers.
+      var caseNo = lines[1].replace('Case No. ', '');
+      var report = [
+        'Object: ' + object,
+        'Location: ' + room,
+        'Observed behavior: ' + behavior,
+        'Frequency: ' + form.elements.frequency.value.trim(),
+        'Appears to be listening: ' + (form.elements.listening.checked ? 'yes' : 'no'),
+        'Requests Controlled Observation Session (Box 14): ' + (form.elements.session.checked ? 'yes' : 'no')
+      ].join('\n');
+      var mail = document.createElement('p');
+      var link = document.createElement('a');
+      link.href = 'mailto:info@officeofordinaryhauntings.net' +
+        '?subject=' + encodeURIComponent('Form 27-B/6 ' + caseNo) +
+        '&body=' + encodeURIComponent(report);
+      link.textContent = 'Transmit a copy of this report to the Office';
+      mail.appendChild(link);
+      receipt.appendChild(mail);
+
       form.hidden = true;
       receipt.hidden = false;
       receipt.focus();
