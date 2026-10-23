@@ -42,6 +42,13 @@ https://officeofordinaryhauntings.net {
 		file_server
 	}
 
+	# Notes for developers that live in pages/ but are not part of the site.
+	# pages/ is the document root, so without this they would be served.
+	@devnotes path /README.md /DO_NOT_MODIFY_FILES_HERE.txt
+	handle @devnotes {
+		respond "Not found" 404
+	}
+
 	# Everything else is a page: "/" is pages/index.html, "/about.html" is
 	# pages/about.html. A request for "/pages/..." looks for pages/pages/... and 404s.
 	handle {
