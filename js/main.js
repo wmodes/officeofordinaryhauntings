@@ -195,8 +195,10 @@
    * /ooh/next, because the ring's checker reads the static HTML (it does not
    * run JavaScript) and only keeps sites that carry those links. This script
    * then redirects each click to a random site from js/ring.json, a snapshot
-   * of the ring's member list. If the list has not loaded, or the visitor
-   * opens the link in a new tab or window, the normal ring link is followed.
+   * of the ring's member list. A plain click replaces this page; cmd/ctrl/shift
+   * or middle click opens the random site in a new tab. If the list has not
+   * loaded, or the visitor uses alt-click or the context menu, the normal ring
+   * link is followed.
    *
    * @param {NodeListOf<HTMLAnchorElement>} links The ring's Prev/Next links.
    */
@@ -208,13 +210,29 @@
       .then(function (list) { destinations = Array.isArray(list) ? list : []; })
       .catch(function () { /* no list: the plain ring links still work */ });
 
+    /** @returns {string} The URL of a randomly chosen ring member. */
+    function pickRandomUrl() {
+      return destinations[Math.floor(Math.random() * destinations.length)].url;
+    }
+
     links.forEach(function (link) {
       link.addEventListener('click', function (evt) {
-        var modified = evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey || evt.button !== 0;
-        if (modified || destinations.length === 0) { return; }
+        if (destinations.length === 0 || evt.button !== 0 || evt.altKey) { return; }
 
         evt.preventDefault();
-        window.location.href = destinations[Math.floor(Math.random() * destinations.length)].url;
+        if (evt.metaKey || evt.ctrlKey || evt.shiftKey) {
+          window.open(pickRandomUrl(), '_blank', 'noopener,noreferrer');
+        } else {
+          window.location.href = pickRandomUrl();
+        }
+      });
+
+      // Middle click fires "auxclick", not "click".
+      link.addEventListener('auxclick', function (evt) {
+        if (destinations.length === 0 || evt.button !== 1) { return; }
+
+        evt.preventDefault();
+        window.open(pickRandomUrl(), '_blank', 'noopener,noreferrer');
       });
     });
   }
