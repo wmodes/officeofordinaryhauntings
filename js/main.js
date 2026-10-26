@@ -188,6 +188,40 @@
     render();
   }
 
+  /**
+   * Make the webring's Prev and Next links go to a random member.
+   *
+   * The links stay plain HTML pointing at the ring's own /ooh/previous and
+   * /ooh/next, because the ring's checker reads the static HTML (it does not
+   * run JavaScript) and only keeps sites that carry those links. This script
+   * then redirects each click to a random site from js/ring.json, a snapshot
+   * of the ring's member list. If the list has not loaded, or the visitor
+   * opens the link in a new tab or window, the normal ring link is followed.
+   *
+   * @param {NodeListOf<HTMLAnchorElement>} links The ring's Prev/Next links.
+   */
+  function initRandomRing(links) {
+    var destinations = [];
+
+    fetch('/js/ring.json')
+      .then(function (response) { return response.ok ? response.json() : []; })
+      .then(function (list) { destinations = Array.isArray(list) ? list : []; })
+      .catch(function () { /* no list: the plain ring links still work */ });
+
+    links.forEach(function (link) {
+      link.addEventListener('click', function (evt) {
+        var modified = evt.metaKey || evt.ctrlKey || evt.shiftKey || evt.altKey || evt.button !== 0;
+        if (modified || destinations.length === 0) { return; }
+
+        evt.preventDefault();
+        window.location.href = destinations[Math.floor(Math.random() * destinations.length)].url;
+      });
+    });
+  }
+
+  var ringLinks = document.querySelectorAll('[data-ring-random]');
+  if (ringLinks.length) { initRandomRing(ringLinks); }
+
   var reportForm = document.getElementById('report-form');
   if (reportForm) { initReportForm(reportForm); }
   var guestForm = document.getElementById('guest-form');
